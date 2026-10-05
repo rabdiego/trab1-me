@@ -21,6 +21,6 @@ class DataLoader:
         self.y = shuffled_df[target_variable]
 
 
-    def get_partitions(self) -> tuple[np.ndarray]:
-        return self.X, self.y
+    def get_partitions(self) -> tuple[np.ndarray, np.ndarray]:
+        return self.X.to_numpy(), self.y.to_numpy()
 
