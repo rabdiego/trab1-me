@@ -1,0 +1,43 @@
+==============================================================================
+ETAPA 1 - ANALISE EXPLORATORIA DOS DADOS
+==============================================================================
+
+Variavel resposta: Post_Semester_GPA
+Preditores: Pre_Semester_GPA, Weekly_GenAI_Hours, Traditional_Study_Hours, Tool_Diversity, Paid_Subscription
+Observacoes (n): 50000
+
+------------------------------------------------------------------------------
+Estatisticas descritivas
+------------------------------------------------------------------------------
+Variavel                         media    desvio       min        q1   mediana        q3       max
+Pre_Semester_GPA                3.1461    0.4789    1.1830    2.8340    3.2100    3.5210    3.9980
+Weekly_GenAI_Hours              8.4278    8.2695    0.0000    2.3900    5.8000   11.7200   40.0000
+Traditional_Study_Hours        11.2093    5.1564    1.0000    7.5600   11.1800   14.7100   35.8600
+Tool_Diversity                  2.8003    1.1880    1.0000    2.0000    3.0000    4.0000    5.0000
+Paid_Subscription               0.4231    0.4941    0.0000    0.0000    0.0000    1.0000    1.0000
+Post_Semester_GPA               3.3493    0.4957    1.0000    3.0238    3.4210    3.7490    4.0000
+
+------------------------------------------------------------------------------
+Correlacao (Pearson) com Post_Semester_GPA
+------------------------------------------------------------------------------
+Pre_Semester_GPA                0.9268
+Weekly_GenAI_Hours             -0.0186
+Traditional_Study_Hours         0.1377
+Tool_Diversity                  0.0253
+Paid_Subscription               0.0055
+
+------------------------------------------------------------------------------
+Matriz de correlacao
+------------------------------------------------------------------------------
+                              Pre_Seme  Weekly_G  Traditio  Tool_Div  Paid_Sub  Post_Sem
+Pre_Semester_GPA                1.0000   -0.0011   -0.0046   -0.0057   -0.0010    0.9268
+Weekly_GenAI_Hours             -0.0011    1.0000   -0.1574    0.0084    0.1969   -0.0186
+Traditional_Study_Hours        -0.0046   -0.1574    1.0000    0.0036   -0.0353    0.1377
+Tool_Diversity                 -0.0057    0.0084    0.0036    1.0000    0.0058    0.0253
+Paid_Subscription              -0.0010    0.1969   -0.0353    0.0058    1.0000    0.0055
+Post_Semester_GPA               0.9268   -0.0186    0.1377    0.0253    0.0055    1.0000
+
+Graficos
+preditores_vs_alvo.png
+correlacoes.png
+distribuicoes.png
