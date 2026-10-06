@@ -1,0 +1,39 @@
+======================================================================
+ETAPA 2 - AJUSTE DO MODELO E INFERENCIA GLOBAL
+======================================================================
+
+Variavel resposta: Post_Semester_GPA
+Regressoras: Pre_Semester_GPA, Weekly_GenAI_Hours, Traditional_Study_Hours, Tool_Diversity, Paid_Subscription
+Observacoes (n): 50000
+Parametros (p): 6
+
+Tabela de coeficientes
+Variavel                      beta   erro-padrao           t       p-valor                         IC95%
+--------------------------------------------------------------------------------------------------------
+Intercept                  0.13392       0.00580      23.099    1.964e-117          [ 0.12256;  0.14529]
+Pre_Semester_GPA           0.96020       0.00160     598.984             0          [ 0.95706;  0.96335]
+Weekly_GenAI_Hours         0.00015       0.00010       1.536        0.1245          [-0.00004;  0.00033]
+Traditional_Study_Hours     0.01371       0.00015      90.933             0          [ 0.01341;  0.01400]
+Tool_Diversity             0.01249       0.00065      19.328     6.297e-83          [ 0.01122;  0.01376]
+Paid_Subscription          0.01090       0.00158       6.876     6.224e-12          [ 0.00779;  0.01400]
+
+Somas de quadrados
+SQRES = 1472.842537
+SQREG = 10811.475707
+SQTOT = 12284.318244
+
+Qualidade do ajuste
+R2 = 0.880104
+R2 ajustado = 0.880092
+Variancia residual = 0.029460
+Desvio padrao residual = 0.171640
+
+Teste F global do modelo
+H0: todos os coeficientes, exceto o intercepto, sao nulos
+F = 73396.7010
+Graus de liberdade = (5, 49994)
+p-valor = 0
+
+Graficos
+coeficientes.png
+ajustado_vs_observado.png

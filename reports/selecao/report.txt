@@ -1,0 +1,114 @@
+==============================================================================
+ETAPA 3 - SELECAO DE MODELO E TESTE DE HIPOTESES
+==============================================================================
+
+Variavel resposta: Post_Semester_GPA
+Candidatas: Pre_Semester_GPA, Weekly_GenAI_Hours, Traditional_Study_Hours, Tool_Diversity, Paid_Subscription
+Observacoes (n): 50000
+Metodo: forward-stepwise guiado por teste F parcial
+alpha de entrada: 0.05
+alpha de saida: 0.1
+AIC = n ln(SQRes/n) + 2p
+BIC = n ln(SQRes/n) + p ln(n)
+
+------------------------------------------------------------------------------
+1. Modelo completo
+------------------------------------------------------------------------------
+R2 = 0.880104
+R2 ajustado = 0.880092
+AIC = -176229.44
+BIC = -176176.52
+F global = 73396.7010
+
+------------------------------------------------------------------------------
+2. Subconjuntos avaliados (32 modelos), ordenados por AIC
+------------------------------------------------------------------------------
+Regressoras                                   R2      R2aj         AIC         BIC
+----------------------------------------------------------------------------------
+PreGPA+GenAIH+EstudoH+Divers+Assin        0.8801    0.8801  -176229.44  -176176.52
+PreGPA+EstudoH+Divers+Assin               0.8801    0.8801  -176229.08  -176184.98
+PreGPA+GenAIH+EstudoH+Divers              0.8800    0.8800  -176184.17  -176140.08
+PreGPA+EstudoH+Divers                     0.8800    0.8800  -176177.63  -176142.35
+PreGPA+GenAIH+EstudoH+Assin               0.8792    0.8792  -175859.22  -175815.12
+PreGPA+EstudoH+Assin                      0.8792    0.8792  -175858.37  -175823.10
+PreGPA+GenAIH+EstudoH                     0.8791    0.8791  -175813.18  -175777.90
+PreGPA+EstudoH                            0.8791    0.8791  -175805.64  -175779.18
+PreGPA+GenAIH+Divers+Assin                0.8603    0.8603  -168578.34  -168534.24
+PreGPA+GenAIH+Divers                      0.8602    0.8602  -168544.46  -168509.18
+PreGPA+Divers+Assin                       0.8599    0.8599  -168444.80  -168409.52
+PreGPA+Divers                             0.8599    0.8598  -168432.62  -168406.16
+PreGPA+GenAIH+Assin                       0.8593    0.8593  -168245.78  -168210.50
+PreGPA+GenAIH                             0.8592    0.8592  -168211.22  -168184.76
+PreGPA+Assin                              0.8590    0.8590  -168116.26  -168089.80
+PreGPA                                    0.8589    0.8589  -168103.37  -168085.73
+EstudoH+Divers+Assin                      0.0197    0.0196   -71170.14   -71134.86
+GenAIH+EstudoH+Divers+Assin               0.0197    0.0196   -71168.18   -71124.08
+EstudoH+Divers                            0.0196    0.0195   -71166.78   -71140.32
+GenAIH+EstudoH+Divers                     0.0196    0.0195   -71165.20   -71129.92
+EstudoH+Assin                             0.0191    0.0190   -71141.00   -71114.54
+GenAIH+EstudoH+Assin                      0.0191    0.0190   -71139.06   -71103.78
+EstudoH                                   0.0189    0.0189   -71137.49   -71119.85
+GenAIH+EstudoH                            0.0190    0.0189   -71135.98   -71109.52
+GenAIH+Divers+Assin                       0.0011    0.0010   -70230.91   -70195.63
+GenAIH+Divers                             0.0010    0.0010   -70228.61   -70202.15
+Divers                                    0.0006    0.0006   -70212.90   -70195.26
+Divers+Assin                              0.0007    0.0006   -70212.35   -70185.89
+GenAIH+Assin                              0.0004    0.0004   -70200.67   -70174.21
+GenAIH                                    0.0003    0.0003   -70198.28   -70180.64
+(nulo)                                   -0.0000   -0.0000   -70182.97   -70174.16
+Assin                                     0.0000    0.0000   -70182.50   -70164.86
+
+Melhor AIC: Pre_Semester_GPA, Weekly_GenAI_Hours, Traditional_Study_Hours, Tool_Diversity, Paid_Subscription (-176229.44)
+Melhor BIC: Pre_Semester_GPA, Traditional_Study_Hours, Tool_Diversity, Paid_Subscription (-176184.98)
+
+------------------------------------------------------------------------------
+3. Caminho stepwise
+------------------------------------------------------------------------------
+passo  acao                                 SQExtra           F           p        R2      R2aj         AIC         BIC
+    1  entrou Pre_Semester_GPA         10551.280892  304403.677           0    0.8589    0.8589  -168103.37  -168085.73
+    2  entrou Traditional_Study_Hours    247.479854    8329.028           0    0.8791    0.8791  -175805.64  -175779.18
+    3  entrou Tool_Diversity              11.070056     375.357   2.582e-83    0.8800    0.8800  -176177.63  -176142.35
+    4  entrou Paid_Subscription            1.575389      53.473    2.66e-13    0.8801    0.8801  -176229.08  -176184.98
+
+------------------------------------------------------------------------------
+4. Modelo selecionado
+------------------------------------------------------------------------------
+Regressoras: Pre_Semester_GPA, Traditional_Study_Hours, Tool_Diversity, Paid_Subscription
+Variavel                      beta   erro-padrao           t       p-valor                         IC95%
+--------------------------------------------------------------------------------------------------------
+Intercept                  0.13535       0.00572      23.652    5.404e-123          [ 0.12414;  0.14657]
+Pre_Semester_GPA           0.96020       0.00160     598.975             0          [ 0.95706;  0.96334]
+Traditional_Study_Hours     0.01367       0.00015      91.785             0          [ 0.01338;  0.01396]
+Tool_Diversity             0.01250       0.00065      19.341     4.925e-83          [ 0.01123;  0.01376]
+Paid_Subscription          0.01137       0.00155       7.313      2.66e-13          [ 0.00832;  0.01442]
+
+R2 = 0.880098
+R2 ajustado = 0.880089
+AIC = -176229.08
+BIC = -176184.98
+F global = 91742.7913
+p-valor do F global = 0
+
+------------------------------------------------------------------------------
+5. Teste F parcial: modelo selecionado vs modelo completo
+------------------------------------------------------------------------------
+H0: os coeficientes das variaveis excluidas sao conjuntamente nulos
+Excluidas: Weekly_GenAI_Hours
+Restricoes (r): 1
+SQExtra = 0.069516
+F = 2.3596
+p-valor = 0.124518
+Conclusao: nao rejeita H0, as variaveis excluidas nao agregam informacao.
+
+------------------------------------------------------------------------------
+6. Comparacao de criterios
+------------------------------------------------------------------------------
+Nulo        AIC = -70182.97  BIC = -70174.16
+Selecionado AIC = -176229.08  BIC = -176184.98
+Completo    AIC = -176229.44  BIC = -176176.52
+
+Graficos
+criterios.png
+caminho_stepwise.png
+r2_subconjuntos.png
+coeficientes_final.png

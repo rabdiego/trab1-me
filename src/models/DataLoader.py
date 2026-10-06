@@ -22,5 +22,5 @@ class DataLoader:
 
 
     def get_partitions(self) -> tuple[np.ndarray, np.ndarray]:
-        return self.X.to_numpy(), self.y.to_numpy()
+        return self.X.to_numpy(dtype=float), self.y.to_numpy(dtype=float)
 
