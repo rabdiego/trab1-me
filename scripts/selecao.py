@@ -26,6 +26,7 @@ FEATURES = [
 ]
 SHORT = ['PreGPA', 'GenAIH', 'EstudoH', 'Divers', 'Assin']
 TARGET = 'Post_Semester_GPA'
+PRE_GPA = FEATURES.index('Pre_Semester_GPA')
 ALPHA_ENTER = 0.05
 ALPHA_REMOVE = 0.10
 
@@ -60,6 +61,8 @@ def metrics(columns: list[int]) -> dict:
 
 
 all_subsets = [metrics([j for j in range(q) if mask & (1 << j)]) for mask in range(2 ** q)]
+
+has_pregpa = np.array([PRE_GPA in item['columns'] for item in all_subsets])
 
 selected: list[int] = []
 steps: list[dict] = []
@@ -245,12 +248,13 @@ sizes = np.array([len(item['columns']) for item in all_subsets])
 fig, axes = plt.subplots(1, 2, figsize=(13, 5))
 for ax, key, title in zip(axes, ['aic', 'bic'], ['AIC', 'BIC']):
     values = np.array([item[key] for item in all_subsets])
-    ax.scatter(sizes, values, s=28, alpha=0.55, color=theme.BRIGHT_BLUE, label='Todos os subconjuntos')
+    ax.scatter(sizes[has_pregpa], values[has_pregpa], s=30, alpha=0.75, color=theme.BLUE, label='com Pre_Semester_GPA')
+    ax.scatter(sizes[~has_pregpa], values[~has_pregpa], s=30, alpha=0.75, color=theme.RED, label='sem Pre_Semester_GPA')
     path_x = [0] + [len(step['selected']) for step in steps]
     path_y = [initial[key]] + [step[key] for step in steps]
-    ax.plot(path_x, path_y, color=theme.BRIGHT_YELLOW, marker='o', linewidth=1.5, label='Caminho stepwise')
+    ax.plot(path_x, path_y, color=theme.YELLOW, marker='o', linewidth=1.6, label='Caminho stepwise')
     best = min(all_subsets, key=lambda item: item[key])
-    ax.scatter([len(best['columns'])], [best[key]], s=140, marker='*', color=theme.BRIGHT_RED, label=f'Melhor {title}')
+    ax.scatter([len(best['columns'])], [best[key]], s=170, marker='*', color=theme.GREEN, label=f'Melhor {title}')
     ax.set_xlabel('Numero de regressoras')
     ax.set_ylabel(title)
     ax.set_title(title)
@@ -260,26 +264,31 @@ fig.savefig(REPORT_DIR / 'criterios.png', dpi=150)
 plt.close(fig)
 
 if steps:
-    step_p = np.array([step['p'] for step in steps])
-    influence = -np.log10(np.clip(step_p, 1e-300, 1.0))
-    colors = [theme.BRIGHT_GREEN if step['action'].startswith('entrou') else theme.BRIGHT_RED for step in steps]
+    step_f = np.array([step['f'] for step in steps])
+    colors = [theme.GREEN if step['action'].startswith('entrou') else theme.RED for step in steps]
 
-    fig, ax = plt.subplots(figsize=(9, 0.6 * len(steps) + 2))
-    ax.barh(np.arange(len(steps)), influence, color=colors)
+    fig, ax = plt.subplots(figsize=(10, 0.7 * len(steps) + 2))
+    ax.barh(np.arange(len(steps)), step_f, color=colors)
+    ax.set_xscale('log')
+    ax.set_xlim(step_f.min()/3, step_f.max()*8)
     ax.set_yticks(np.arange(len(steps)))
     ax.set_yticklabels([f'{index + 1}. {step["action"]}' for index, step in enumerate(steps)])
-    ax.axvline(-np.log10(ALPHA_ENTER), color=theme.BRIGHT_YELLOW, linestyle='--', linewidth=1, label='alpha de entrada')
-    ax.axvline(-np.log10(ALPHA_REMOVE), color=theme.BRIGHT_MAGENTA, linestyle='--', linewidth=1, label='alpha de saida')
-    ax.set_xlabel('-log10(p-valor do F parcial)')
-    ax.set_title('Caminho stepwise')
-    ax.legend()
+    for index, step in enumerate(steps):
+        label = 'p ~ 0' if step['p'] == 0 else f'p = {step["p"]:.2g}'
+        ax.text(step['f'] * 1.15, index, label, va='center', color=theme.FOREGROUND, fontsize=9)
+    ax.set_xlabel('Estatistica F parcial (escala log)')
+    ax.set_title('Contribuicao de cada variavel no caminho stepwise')
     fig.tight_layout()
     fig.savefig(REPORT_DIR / 'caminho_stepwise.png', dpi=150)
     plt.close(fig)
 
 fig, ax = plt.subplots(figsize=(9, 5))
-ax.scatter(sizes, [item['r2'] for item in all_subsets], s=28, alpha=0.5, color=theme.BRIGHT_RED, label='R2')
-ax.scatter(sizes, [item['r2_adj'] for item in all_subsets], s=28, alpha=0.5, color=theme.BRIGHT_AQUA, label='R2 ajustado')
+r2_values = np.array([item['r2'] for item in all_subsets])
+r2_adj_values = np.array([item['r2_adj'] for item in all_subsets])
+ax.scatter(sizes[has_pregpa], r2_values[has_pregpa], s=30, color=theme.BLUE, marker='o', label='R2 com PreGPA')
+ax.scatter(sizes[~has_pregpa], r2_values[~has_pregpa], s=30, color=theme.RED, marker='o', label='R2 sem PreGPA')
+ax.scatter(sizes[has_pregpa], r2_adj_values[has_pregpa], s=45, color=theme.BLUE, marker='^', facecolors='none', label='R2aj com PreGPA')
+ax.scatter(sizes[~has_pregpa], r2_adj_values[~has_pregpa], s=45, color=theme.RED, marker='^', facecolors='none', label='R2aj sem PreGPA')
 ax.set_xlabel('Numero de regressoras')
 ax.set_ylabel('R2')
 ax.set_title('R2 por subconjunto')
@@ -292,11 +301,14 @@ positions = np.arange(len(final_labels))
 errors = np.vstack([final_beta - final_intervals[:, 0], final_intervals[:, 1] - final_beta])
 
 fig, ax = plt.subplots(figsize=(9, 5))
-ax.errorbar(final_beta, positions, xerr=errors, fmt='o', color=theme.BRIGHT_YELLOW, ecolor=theme.BRIGHT_AQUA, capsize=4)
-ax.axvline(0, color=theme.BRIGHT_RED, linestyle='--', linewidth=1)
+ax.errorbar(final_beta, positions, xerr=errors, fmt='o', color=theme.BLUE, ecolor=theme.MAGENTA, capsize=4)
+ax.axvline(0, color=theme.RED, linestyle='--', linewidth=1)
+ax.set_xscale('symlog', linthresh=1e-4)
+ax.set_xlim(0, 1e1)
+ax.set_xticks([0, 1e-4, 1e-3, 1e-2, 1e-1, 1e0, 1e1])
 ax.set_yticks(positions)
 ax.set_yticklabels(final_labels)
-ax.set_xlabel('Coeficiente')
+ax.set_xlabel('Coeficiente (escala log simetrica)')
 ax.set_title('Modelo selecionado: coeficientes com IC 95%')
 fig.tight_layout()
 fig.savefig(REPORT_DIR / 'coeficientes_final.png', dpi=150)

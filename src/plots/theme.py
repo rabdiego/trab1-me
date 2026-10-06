@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 
-BACKGROUND = '#1d2021'
-FOREGROUND = '#fbf1c7'
+BACKGROUND = '#ebdbb2'
+FOREGROUND = '#1d2021'
 GRID = '#3c3836'
 RED = '#cc241d'
 GREEN = '#98971a'
@@ -18,13 +18,13 @@ BRIGHT_MAGENTA = '#d3869b'
 BRIGHT_AQUA = '#8ec07c'
 
 PALETTE = [
-    BRIGHT_YELLOW,
-    BRIGHT_AQUA,
-    BRIGHT_BLUE,
-    BRIGHT_MAGENTA,
-    BRIGHT_GREEN,
+    BLUE,
+    RED,
+    GREEN,
+    YELLOW,
+    MAGENTA,
+    AQUA,
     ORANGE,
-    BRIGHT_RED,
 ]
 
 
