@@ -1,0 +1,126 @@
+==============================================================================
+ETAPA 5 - DIAGNOSTICO E VALIDACAO DOS PRESSUPOSTOS
+==============================================================================
+
+Ferramentas do livro texto: residuo bruto, padronizado e studentizado;
+alavancagem; distancia de Cook; QQ-plot; teste chi-quadrado de aderencia;
+F parcial para termos quadraticos; VIF; graficos de residuos.
+
+Variavel resposta: Post_Semester_GPA
+Modelo diagnosticado (selecionado na etapa 3): Pre_Semester_GPA, Traditional_Study_Hours, Tool_Diversity, Paid_Subscription
+Observacoes (n): 50000
+Parametros (p): 5
+R2 = 0.880098
+MQRes = 0.029461
+
+------------------------------------------------------------------------------
+1. Residuos
+------------------------------------------------------------------------------
+Residuo bruto e_i = y_i - y_hat_i
+  Media = 0.000000
+  Desvio padrao = 0.171636
+  Minimo = -1.073132
+  Maximo = 0.764732
+
+Residuo padronizado d_i = e_i / sqrt(MQRes)
+  Dentro de (-2, +2): 95.3220% (esperado ~95%)
+  Fora de (-2, +2): 2339
+
+Residuo studentizado r_i = e_i / sqrt(MQRes (1 - h_ii))
+  Com |r_i| > 3: 350
+
+------------------------------------------------------------------------------
+2. Normalidade dos erros
+------------------------------------------------------------------------------
+Ferramenta grafica: QQ-plot dos residuos studentizados (qq_residuos.png)
+Teste de aderencia chi-quadrado
+H0: os residuos seguem distribuicao normal
+  chi2 = 171.4796
+  Graus de liberdade = 9
+  p-valor = 3.03427e-32
+  Classes de igual probabilidade sob N(0, 1):
+    classe  1: observado =   4519  esperado = 5000.0
+    classe  2: observado =   4632  esperado = 5000.0
+    classe  3: observado =   5065  esperado = 5000.0
+    classe  4: observado =   5281  esperado = 5000.0
+    classe  5: observado =   5333  esperado = 5000.0
+    classe  6: observado =   5177  esperado = 5000.0
+    classe  7: observado =   5257  esperado = 5000.0
+    classe  8: observado =   5174  esperado = 5000.0
+    classe  9: observado =   4972  esperado = 5000.0
+    classe 10: observado =   4590  esperado = 5000.0
+
+------------------------------------------------------------------------------
+3. Homocedasticidade
+------------------------------------------------------------------------------
+Ferramentas graficas: residuos vs valores ajustados e residuos vs regressores
+(residuos_vs_ajustados.png e residuos_vs_preditores.png).
+Padrao satisfatorio: dispersao aleatoria em torno de zero, sem funil.
+Padrao em funil: variancia cresce com a resposta; pede transformacao em Y.
+
+------------------------------------------------------------------------------
+4. Linearidade e inadequacao do modelo
+------------------------------------------------------------------------------
+Ferramenta grafica: residuos vs regressores e residuos vs ajustados.
+Teste F parcial para o termo quadratico x_j^2 (soma de quadrados extra)
+Regressor                              F       p-valor
+Pre_Semester_GPA                625.1514  3.96091e-137
+Traditional_Study_Hours           7.6353    0.00572589
+Tool_Diversity                    1.1734      0.278711
+Paid_Subscription                binaria nao se aplica
+
+------------------------------------------------------------------------------
+5. Independencia dos erros
+------------------------------------------------------------------------------
+Ferramenta grafica: residuos em sequencia de coleta (residuos_sequencia.png).
+Nota: o dataset nao tem ordem natural (amostra embaralhada), portanto os
+padroes ciclicos ou blocos de mesmo sinal nao sao interpretaveis aqui.
+
+------------------------------------------------------------------------------
+6. Multicolinearidade
+------------------------------------------------------------------------------
+Fator de inflacao da variancia FIV_j = 1 / (1 - R_j^2)
+Variavel                       R2 auxiliar       FIV
+Pre_Semester_GPA                  0.000055    1.0001
+Traditional_Study_Hours           0.001284    1.0013
+Tool_Diversity                    0.000080    1.0001
+Paid_Subscription                 0.001285    1.0013
+Referencia do livro: FIV > 5 ou 10 indica multicolinearidade severa.
+
+------------------------------------------------------------------------------
+7. Pontos de alavancagem e influentes
+------------------------------------------------------------------------------
+Alavancagem h_ii (diagonal de H = X (X^T X)^-1 X^T)
+  Minimo = 0.00003528
+  Maximo = 0.00051409
+  h_ii > 2p/n = 0.00020000: 1519
+
+Distancia de Cook D_i = (r_i^2 / p) * h_ii / (1 - h_ii)
+  D_i > 4/n = 0.00008000: 2480 (4.9600%)
+  Cinco maiores distancias:
+  indice        h_ii  r studentizado        Cook
+   45551    0.000218       -5.540922    0.001339
+   49694    0.000154       -6.051158    0.001126
+    5573    0.000187       -5.469749    0.001122
+    7965    0.000136       -6.207006    0.001045
+    8254    0.000355       -3.820422    0.001035
+
+------------------------------------------------------------------------------
+8. Conclusao
+------------------------------------------------------------------------------
+Normalidade: rejeitada pelo teste chi-quadrado (p = 3.034e-32);
+  95.32% dos residuos padronizados em (-2, +2) (esperado ~95%).
+Homocedasticidade: avaliar visualmente os graficos de residuos.
+Linearidade: ver discriminacao dos termos quadraticos acima.
+Multicolinearidade: ausente (FIV abaixo de 5).
+Influencia: 2480 observacoes com D_i > 4/n (4.9600%).
+
+Graficos
+residuos_vs_ajustados.png
+residuos_vs_preditores.png
+qq_residuos.png
+qui_quadrado.png
+residuos_sequencia.png
+influencia.png
+cooks.png
+vif.png
